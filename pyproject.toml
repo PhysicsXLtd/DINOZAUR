@@ -1,0 +1,76 @@
+[build-system]
+requires = [ "setuptools",]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dinozaur"
+version = "0.1.0"
+description = "Implementation of Light-Weight Diffusion Multiplier and Uncertainty Quantification for Fourier Neural Operators"
+authors = [
+    {name = "PhysicsX", email = "support@physicsx.ai"},
+]
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+keywords = ["neural operator", "Fourier neural operator", "diffusion multipler", "uncertainty quantification"]
+license = {file = "LICENSE.txt"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    # "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+        "torch>=2.6.0, <2.8.0",
+        "numpy>=1.24.0, <1.27.0",
+        "h5py==3.10.0",
+        "tensorly~=0.8.1",
+        "tensorly-torch~=0.5.0",
+        "open3d>=0.17.0, <0.20.0",
+        "schedulefree~=1.4.1",
+        "uncertainty-toolbox~=0.1.1",
+        "torch-scatter @ git+https://github.com/rusty1s/pytorch_scatter.git@3d10cdc838397bfc73aa159649f36ef3186cf4ce",
+        "src @ git+https://github.com/DLR-RM/curvature.git@164d3ac782a34e2cb1b563698843d33b8b272ce0",
+        "ruff~=0.14.1",
+    ]
+
+[project.urls]
+"Homepage" = "https://github.com/PhysicsXLtd/DINOZAUR"
+"Paper" = "https://arxiv.org/abs/2508.00643"
+"Bug Reports" = "https://github.com/PhysicsXLtd/DINOZAUR/issues"
+"Dataset" = "https://huggingface.co/datasets/PhysicsX/DINOZAUR"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["C", "D", "E", "F", "I", "N", "PL", "W"]
+ignore = [
+    "PLR2004",  # Magic value used
+    "PLW2901",  # Inplace modification
+    ]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.pip-tools]
+generate-hashes = true
+verbose = true
+upgrade = true
+
+[tool.ruff.lint.pep8-naming]
+classmethod-decorators = [
+    "classmethod",
+]
+
+[tool.ruff.lint.pylint]
+max-args = 20
+
+[tool.ruff.lint.mccabe]
+max-complexity = 11

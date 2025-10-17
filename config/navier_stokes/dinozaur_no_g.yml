@@ -1,0 +1,33 @@
+training_params:
+  device : cuda
+  num_epochs : 150
+  optimizer: torch.optim.AdamW
+  optimizer_params:
+    lr: 0.01
+    weight_decay: 0.0001
+  scheduler: torch.optim.lr_scheduler.OneCycleLR
+  scheduler_params:
+    max_lr: 0.01
+  criterion: dinozaur.training.losses.RelativeLpLoss
+  criterion_params:
+    norm_dims: [1, 2]
+
+model_params:
+  architecture: dinozaur.models.DINOZAUR
+  architecture_params: 
+    input_size: 4
+    output_size: 1
+    width: 64
+    modes: [16, 16, 4]
+    extent: [6.283185307179586, 6.283185307179586, 10]
+    include_gradient_features: False
+    domain_padding: [0, 0, 0.5]
+
+data_params:
+  data_folder: data/navier_stokes
+  batch_size : 16
+  features: ["x_3d", "u_in_3d"]
+  extra_inputs: {}
+  target: u_out_3d
+  x_normalizer_class: dinozaur.training.scalers.IdentityScaler
+  y_normalizer_class: dinozaur.training.scalers.IdentityScaler

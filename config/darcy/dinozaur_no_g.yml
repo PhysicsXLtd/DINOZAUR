@@ -1,0 +1,31 @@
+training_params:
+  device : cuda
+  num_epochs : 150
+  optimizer: torch.optim.AdamW
+  optimizer_params:
+    lr: 0.001
+    weight_decay: 0.0001
+  scheduler: torch.optim.lr_scheduler.OneCycleLR
+  scheduler_params:
+    max_lr: 0.001
+  criterion: dinozaur.training.losses.RelativeLpLoss
+  criterion_params: {}
+
+model_params:
+  architecture: dinozaur.models.DINOZAUR
+  architecture_params: 
+    input_size: 1
+    output_size: 1
+    width: 32
+    modes: [12, 12]
+    include_gradient_features: False
+    domain_padding: 0.125
+
+data_params:
+  data_folder: data/darcy
+  batch_size : 16
+  features: ['coeff']
+  extra_inputs: {}
+  target: sol
+  x_normalizer_class: dinozaur.training.scalers.GaussianScaler
+  y_normalizer_class: dinozaur.training.scalers.GaussianScaler

@@ -1,0 +1,39 @@
+training_params:
+  device : cuda
+  num_epochs : 150
+  optimizer: torch.optim.AdamW
+  optimizer_params:
+    lr: 0.001
+    weight_decay: 0.0001
+  scheduler: torch.optim.lr_scheduler.OneCycleLR
+  scheduler_params:
+    max_lr: 0.001
+  criterion: dinozaur.training.losses.RelativeLpLoss
+  criterion_params: {}
+
+model_params:
+  architecture: dinozaur.models.GINOd
+  architecture_params: 
+    input_size: 2
+    output_size: 1
+    n_positional_encoding_frequencies: 16
+    width: 64
+    modes: [24, 24, 24]
+    include_gradient_features: False
+    factorization: tucker
+    factorization_rank: 0.0001
+    domain_padding: 0.125
+    padding_mode: symmetric
+
+data_params:
+  data_folder: data/ahmed_bodies
+  batch_size : 1
+  features: ["sdf", "mesh.normalised_inlet_velocity_per_grid"]
+  extra_inputs:
+    grid_points: normalized_sdf_query_points
+    out_points: normalized_vertices
+    u_nu_neighbor_index: neighbors_index_decoder
+    u_nu_neighbor_row_splits: neighbors_row_splits_decoder
+  target: "mesh.pressure_on_verts"
+  x_normalizer_class: dinozaur.training.scalers.IdentityScaler
+  y_normalizer_class: dinozaur.training.scalers.GaussianScaler
