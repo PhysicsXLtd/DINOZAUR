@@ -286,20 +286,25 @@ class Trainer:
 
     def predict(self, data_sample: dict[str, torch.Tensor]):
         """Helper function to perform inference."""
-        sample = {}
+        with torch.no_grad():
+            self.model.eval()
+            self._manage_dropout(
+                enable=self.model_params["architecture_params"].get("dropout", False) > 0
+            )
+            sample = {}
 
-        data_sample.pop(self.val_loader.dataset.target, None)
-        features = torch.cat([data_sample[key] for key in self.val_loader.dataset.features], -1)
+            data_sample.pop(self.val_loader.dataset.target, None)
+            features = torch.cat([data_sample[key] for key in self.val_loader.dataset.features], -1)
 
-        sample["x"] = features
-        for key, value in self.val_loader.dataset.extra_inputs.items():
-            sample[key] = data_sample[value]
-        for key, value in sample.items():
-            sample[key] = value.to(self.device)
+            sample["x"] = features
+            for key, value in self.val_loader.dataset.extra_inputs.items():
+                sample[key] = data_sample[value]
+            for key, value in sample.items():
+                sample[key] = value.to(self.device)
 
-        sample["x"] = self.x_normalizer.transform(sample["x"])
-        prediction = self.model(**sample)
-        prediction = self.y_normalizer.reverse_transform(prediction)
+            sample["x"] = self.x_normalizer.transform(sample["x"])
+            prediction = self.model(**sample)
+            prediction = self.y_normalizer.reverse_transform(prediction)
         return prediction
 
     def _manage_dropout(self, enable: bool) -> None:
